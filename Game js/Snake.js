@@ -20,6 +20,10 @@ snake[0] ={
     y : 10*box
    
 } 
+const dead =new Audio();
+const eat =new Audio();
+dead.src = "die.ogg";
+eat.src = "eat.ogg";
 
 
 let food = {
@@ -92,24 +96,28 @@ function draw(){
  
   if(d=="LEFT"&&snakeX==food.x && snakeY==food.y-box){
       score++
+      eat.play();
       food = {
         x : Math.floor(Math.random()*15+2)*box,
         y : Math.floor(Math.random()*13+4)*box,
     }
 }else if(d=="RIGHT"&&snakeX==food.x-2*box && snakeY==food.y-box){
     score++
+    eat.play();
     food = {
       x : Math.floor(Math.random()*15+2)*box,
       y : Math.floor(Math.random()*13+4)*box,
   }
 }else if(d=="up"&&snakeX==food.x && snakeY==food.y){
     score++
+    eat.play();
     food = {
       x : Math.floor(Math.random()*15+2)*box,
       y : Math.floor(Math.random()*13+4)*box,
   }
 }else if(d=="DOWN"&&snakeX==food.x-box && snakeY==food.y-2*box){
     score++
+    eat.play();
     food = {
       x : Math.floor(Math.random()*15+2)*box,
       y : Math.floor(Math.random()*13+4)*box,
@@ -133,6 +141,7 @@ let newHead ={
 
   if(snakeX < box || snakeX > 16*box || snakeY < 3*box 
     || snakeY > 16*box || collision(newHead,snake)){
+        dead.play();
     clearInterval(game); 
    
 }
@@ -149,4 +158,4 @@ ctx.fillStyle = "grey";
   
 } 
 
-let game = setInterval(draw,300);
+let game = setInterval(draw,100);
