@@ -14,17 +14,24 @@ snake[0] ={
     x : 9*box,
     y : 10*box
    
+}
+ snake[1] ={
+    x : 9*box,
+    y : 10*box
+   
 } 
 
 
 let food = {
-    x : Math.floor(Math.random()*16+2)*box,
-    y : Math.floor(Math.random()*14+4)*box,
+    x : Math.floor(Math.random()*15+2)*box,
+    y : Math.floor(Math.random()*13+4)*box,
 }
 
 let score = 0;
 
-let d;
+//control the snake
+
+let d="LEFT";
 document.addEventListener("keydown",direction);
 
 function direction(event){
@@ -56,35 +63,63 @@ function draw(){
         ctx.fillStyle = (i==0)? "green":"blue";
         ctx.fillRect(snake[i].x,snake[i].y,box,box);
 
-        ctx.strokeStyle = "red";
-        ctx.strokeRect(snake[i].x,snake[i].y,box,box);
     }
+   
     ctx.fillStyle = "red";
     ctx.beginPath();
-    ctx.arc(food.x,food.y,0.5*box,0*Math.PI,2*Math.PI);
+    ctx.arc(food.x-0.5*box,food.y-0.5*box,0.5*box,0*Math.PI,2*Math.PI);
     ctx.stroke();
     ctx.fill();
-    
+   
+    //old head position
  let snakeX =snake[0].x;
  let snakeY =snake[0].y;
 
- console.log(snakeX);
-  if(d="LEFT") snakeX-=box;
- 
-  if(d="UP") snakeY-=box;
-  if(d="RIGHT") snakeX+=box;
-  if(d="DOWN") snakeY+=box;
+
+  if(d=="LEFT") {
+      snakeX -= box; 
+  }else if(d=="UP"){
+       snakeY -=  box;
+  }else if(d=="RIGHT"){ 
+      snakeX += box;
+  }else if(d=="DOWN") {
+      snakeY += box;
+    }
   console.log(snakeX);
+  console.log(snakeY);
+  console.log(d);
   //if the snake eats the food
-  if(snakeX==food.x && snakeY == food.y){
+ 
+  if(d=="LEFT"&&snakeX==food.x && snakeY==food.y-box){
       score++
       food = {
-        x : Math.floor(Math.random()*17+1)*box,
-        y : Math.floor(Math.random()*14+3)*box,
+        x : Math.floor(Math.random()*15+2)*box,
+        y : Math.floor(Math.random()*13+4)*box,
     }
+}else if(d=="RIGHT"&&snakeX==food.x-2*box && snakeY==food.y-box){
+    score++
+    food = {
+      x : Math.floor(Math.random()*15+2)*box,
+      y : Math.floor(Math.random()*13+4)*box,
+  }
+}else if(d=="up"&&snakeX==food.x && snakeY==food.y){
+    score++
+    food = {
+      x : Math.floor(Math.random()*15+2)*box,
+      y : Math.floor(Math.random()*13+4)*box,
+  }
+}else if(d=="DOWN"&&snakeX==food.x-box && snakeY==food.y-2*box){
+    score++
+    food = {
+      x : Math.floor(Math.random()*15+2)*box,
+      y : Math.floor(Math.random()*13+4)*box,
+  }
 }else{  
         //remove the tail
-        snake.pop();
+        let oldSnake = snake.pop();
+        ctx.fillStyle = "aquamarine";
+        ctx.fillRect(oldSnake.x,oldSnake.y,box,box);
+       console.log(snake.length);
     }
   
   // ADD NEW HEAD
@@ -96,14 +131,17 @@ let newHead ={
 } 
   // game over 
 
-  if(snakeX < box || snakeX > 17*box || snakeY < 3*box 
-    || snakeY > 17*box || collision(newHead,snake)){
+  if(snakeX < box || snakeX > 16*box || snakeY < 3*box 
+    || snakeY > 16*box || collision(newHead,snake)){
     clearInterval(game); 
-    console.log(snakeX);
+   
 }
 
-snake.unshift(newHead)
+snake.unshift(newHead);
 
+ctx.fillStyle = "grey";
+   ctx.font = "45px Changa one";
+   ctx.fillText(score-1,2*box,1.6*box);
 
    ctx.fillStyle = "black";
    ctx.font = "45px Changa one";
@@ -111,4 +149,4 @@ snake.unshift(newHead)
   
 } 
 
-let game = setInterval(draw,100);
+let game = setInterval(draw,300);
